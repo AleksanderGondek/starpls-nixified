@@ -13,7 +13,15 @@
       name = system;
       value = {default = (import ./default.nix {localSystem = system;}).devShell;};
     };
+    definePackages = system: {
+      name = system;
+      value = {
+        "starpls" = (import ./default.nix {localSystem = system;}).starpls.bin;
+        "default" = (import ./default.nix {localSystem = system;}).starpls.bin;
+      };
+    };
   in {
+    packages = builtins.listToAttrs (forSupportedSystems definePackages);
     devShells = builtins.listToAttrs (forSupportedSystems defineDevShells);
   };
 }
