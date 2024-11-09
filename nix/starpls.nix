@@ -1,4 +1,5 @@
 {
+  lib,
   protobuf,
   rust,
 }: let
@@ -22,12 +23,9 @@
     )
     .package
     .version;
-in
-  rust.platform-musl.buildRustPackage {
+  crate-build-params = {
     pname = "starpls";
     inherit version;
-
-    RUSTFLAGS = "-C target-feature=+crt-static";
 
     nativeBuildInputs = [protobuf];
 
@@ -41,7 +39,18 @@ in
     src = starpls-src;
 
     meta = {
-      description = "To be described.";
+      description = "A language server for STarlark.";
+      license = lib.licenses.asl20;
+      platforms = ["x86_64-linux"];
       homepage = "https://github.com/AleksanderGondek/starpls-nixified";
+      mainProgram = "starpls";
     };
-  }
+  };
+in {
+  bin = rust.platform.buildRustPackage crate-build-params;
+  bin-static =
+    rust.platform-musl.buildRustPackage crate-build-params
+    // {
+      RUSTFLAGS = "-C target-feature=+crt-static";
+    };
+}
