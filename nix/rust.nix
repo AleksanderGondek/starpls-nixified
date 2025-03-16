@@ -4,7 +4,7 @@
   rust-bin,
   ...
 }: let
-  bin = rust-bin.nightly."2023-12-06".default.override {
+  bin = rust-bin.nightly."2024-01-01".default.override {
     extensions = ["rust-src"];
     targets = ["x86_64-unknown-linux-musl"];
   };
